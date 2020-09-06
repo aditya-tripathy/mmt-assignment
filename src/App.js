@@ -1,24 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense, lazy } from 'react';
+import './App.scss';
+import Loader from './components/Loader/Loader';
+import { Switch, Route, Redirect } from 'react-router-dom';
+
+const Home = lazy(() => import('./containers/Home'));
+const Folders = lazy(() => import('./containers/Folders'));
 
 function App() {
+  let routes = (
+    <Suspense fallback={<Loader text={'Loading...'} />}>
+      <Switch>
+        <Route path='/home' component={Home} />
+        <Route path='/folders/:id' component={Folders} />
+        <Redirect to='/home' />
+      </Switch>
+    </Suspense>
+  )
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {routes}
     </div>
   );
 }
